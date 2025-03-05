@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { Form, Input, Button, message, Card } from "antd";
 import axios from "axios";
 
 const AuthComponent = () => {
@@ -7,58 +8,67 @@ const AuthComponent = () => {
     const [password, setPassword] = useState("");
     const { token, login, logout } = useContext(AuthContext);
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
+    const handleLogin = async () => {
         try {
-            // todo allow get request
-            // const response = await axios.request({
-            //     method: "GET",
-            //     url: "http://localhost:8080/api/auth/get-token",
-            //     data: {
-            //         username: username,
-            //         password: password
-            //     },
-            // });
-
             const response = await axios.post("http://localhost:8080/api/auth/get-token", {
                 username,
                 password,
             });
 
             const jwt = response.data.token;
-            console.log(jwt);
             login(jwt);
+            message.success("Вы успешно вошли в систему");
         } catch (error) {
-            console.error("Ошибка входа:", error);
+            message.error("Ошибка входа: неверные учетные данные" + error);
         }
     };
 
-    //todo кнопка не активна при сжатии окна браузера
     return (
-        <div>
+        <div style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "20px",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            zIndex: 1000,
+        }}>
             {token ? (
-                <div>
+                <Card style={{
+                    width: 300,
+                    textAlign: "center",
+                    background: "rgba(255, 255, 255, 0.3)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                }}>
                     <p>Вы вошли в систему</p>
-                    <button onClick={logout}>Выйти</button>
-                </div>
+                    <Button type="primary" danger onClick={logout}>
+                        Выйти
+                    </Button>
+                </Card>
             ) : (
-                <form onSubmit={handleLogin}>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Username"
-                        required
-                    />
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
-                        required
-                    />
-                    <button type="submit">Войти</button>
-                </form>
+                <Card style={{
+                    width: 300,
+                    background: "rgba(255, 255, 255, 0.3)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                }}>
+                    <Form layout="vertical" onFinish={handleLogin}>
+                        <Form.Item label="Username" rules={[{ required: true, message: "Введите имя пользователя" }]}>
+                            <Input value={username} onChange={(e) => setUsername(e.target.value)} />
+                        </Form.Item>
+                        <Form.Item label="Password" rules={[{ required: true, message: "Введите пароль" }]}>
+                            <Input.Password value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </Form.Item>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" block>
+                                Войти
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Card>
             )}
         </div>
     );

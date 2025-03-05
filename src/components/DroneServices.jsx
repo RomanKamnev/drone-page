@@ -1,26 +1,28 @@
+import { Typography, List } from "antd";
+import { CheckCircleOutlined } from "@ant-design/icons";
+
 export default function DroneServices() {
     return (
-        <div className="relative z-10 text-center px-6 max-w-3xl mx-auto fade-in">
-            <p className="text-[20px] leading-relaxed mb-6 font-light text-gray-700 tracking-wide">
+        <div className="relative z-10 px-6 max-w-3xl mx-auto fade-in">
+            <Typography.Title level={3} style={{ fontWeight: "bold", marginLeft: "20px" }}>
                 High-quality drone photography and videography for any occasion.
-            </p>
+            </Typography.Title>
 
-            <ul className="text-[18px] leading-relaxed space-y-4 text-left mx-auto max-w-md slide-up">
-                {[
+            <List
+                style={{ textAlign: "left", maxWidth: "400px", marginLeft: "0" }}
+                dataSource={[
                     "4K Ultra HD Video & High-Resolution Photography",
                     "Licensed & Experienced Drone Pilots",
                     "Tailored Solutions for Your Specific Needs",
                     "Fast & Reliable Service",
-                ].map((text, index) => (
-                    <li
-                        key={index}
-                        className="flex items-center gap-3 border-l-4 border-gray-800 pl-4 py-2 transition hover:border-gray-600"
-                    >
-                        <span className="text-gray-800 font-semibold">{text}</span>
-                    </li>
-                ))}
-            </ul>
+                ]}
+                renderItem={(item) => (
+                    <List.Item style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
+                        <CheckCircleOutlined style={{ color: "#1890ff", marginRight: "10px", marginLeft: "10px"  }} />
+                        <Typography.Text strong style={{ textAlign: "left" }}>{item}</Typography.Text>
+                    </List.Item>
+                )}
+            />
         </div>
     );
 }
-
